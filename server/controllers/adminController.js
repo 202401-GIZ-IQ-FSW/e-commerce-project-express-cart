@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const ShopItemModel = require('../models/shopItemmodel');
+const { getUpdateFields } = require('../util/getUpdatedFields');
 
 const getAllShopItems = async (req, res) => {
   try {
@@ -28,6 +29,23 @@ const addShopItem = async (req, res) => {
   }
 };
 
+const updateShopItem = async (req, res) => {
+  const postId = req.params.id;
+  const updatedFields = getUpdateFields(req.body);
+  try {
+    const updatedShopItem = await ShopItemModel.findByIdAndUpdate(postId, updatedFields, { new: true });
+    console.log(updateShopItem);
+    if (!updatedShopItem) {
+      return res.status(404).json({ message: "The shop item you are trying to update wasn't found" });
+    }
+
+    return res.json(updatedShopItem);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
 const removeShopItem = async (req, res) => {
   const postId = req.params.id;
   // return early if the passed id doesn't match mongoose object ids structure
@@ -49,4 +67,5 @@ module.exports = {
   addShopItem,
   getAllShopItems,
   removeShopItem,
+  updateShopItem,
 };

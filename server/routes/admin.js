@@ -1,9 +1,10 @@
 const express = require('express');
-const { addShopItem, getAllShopItems, removeShopItem } = require('../controllers/adminController');
 const router = express.Router();
+const { addShopItem, getAllShopItems, removeShopItem, updateShopItem } = require('../controllers/adminController');
 
 router.get('/', getAllShopItems);
 router.post('/', addShopItem);
+router.patch('/:id', updateShopItem);
 router.delete('/:id', removeShopItem);
 
 module.exports = router;
