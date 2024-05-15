@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { addShopItem, getAllShopItems, removeShopItem, updateShopItem } = require('../controllers/adminController');
+const {
+  getAllShopItems,
+  searchShopItems,
+  addShopItem,
+  updateShopItem,
+  removeShopItem,
+} = require('../controllers/adminController');
 
 router.get('/', getAllShopItems);
+router.get('/search', searchShopItems);
 router.post('/', addShopItem);
 router.patch('/:id', updateShopItem);
 router.delete('/:id', removeShopItem);

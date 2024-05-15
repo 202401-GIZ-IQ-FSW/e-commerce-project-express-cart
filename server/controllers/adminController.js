@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const ShopItemModel = require('../models/shopItemmodel');
 const { getUpdateFields } = require('../util/getUpdatedFields');
 
+// get all shop items
 const getAllShopItems = async (req, res) => {
   try {
     const shopItems = await ShopItemModel.find();
@@ -11,6 +12,27 @@ const getAllShopItems = async (req, res) => {
   }
 };
 
+const searchShopItems = async (req, res) => {
+  const query = req.query;
+  const searchQuery = {};
+
+  // Construct the search query based on the request query parameters
+  if (query.title) {
+    searchQuery.title = { $regex: new RegExp(query.title, 'i') }; // Case-insensitive search for partial match
+  }
+  if (query.category) {
+    searchQuery.category = { $regex: new RegExp(query.category, 'i') }; // Case-insensitive search for partial match
+  }
+
+  try {
+    const shopItems = await ShopItemModel.find(searchQuery);
+    res.json(shopItems);
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+// create a new shop item
 const addShopItem = async (req, res) => {
   try {
     const newItem = await ShopItemModel.create(req.body);
@@ -29,26 +51,29 @@ const addShopItem = async (req, res) => {
   }
 };
 
+// update a shop item's details - any passed fields will be updated
 const updateShopItem = async (req, res) => {
   const postId = req.params.id;
+  // return early if the passed id doesn't match mongoose object ids structure
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    return res.status(404).json({ message: 'Invalid item ID' });
+  }
   const updatedFields = getUpdateFields(req.body);
   try {
     const updatedShopItem = await ShopItemModel.findByIdAndUpdate(postId, updatedFields, { new: true });
-    console.log(updateShopItem);
     if (!updatedShopItem) {
       return res.status(404).json({ message: "The shop item you are trying to update wasn't found" });
     }
 
     return res.json(updatedShopItem);
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: 'Something went wrong' });
   }
 };
 
+// remove a shop item
 const removeShopItem = async (req, res) => {
   const postId = req.params.id;
-  // return early if the passed id doesn't match mongoose object ids structure
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     return res.status(404).json({ message: 'Invalid item ID' });
   }
@@ -63,9 +88,11 @@ const removeShopItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 module.exports = {
   addShopItem,
   getAllShopItems,
   removeShopItem,
   updateShopItem,
+  searchShopItems,
 };
