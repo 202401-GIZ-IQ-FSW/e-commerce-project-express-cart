@@ -13,15 +13,22 @@ const getAllShopItems = async (req, res) => {
 };
 
 const searchShopItems = async (req, res) => {
-  const query = req.query;
+  const { title, category, minPrice, maxPrice } = req.query;
   const searchQuery = {};
 
   // Construct the search query based on the request query parameters
-  if (query.title) {
-    searchQuery.title = { $regex: query.title, $options: 'i' }; // Case-insensitive search for partial match
+  if (title) {
+    searchQuery.title = { $regex: title, $options: 'i' }; // Case-insensitive search for partial match
   }
-  if (query.category) {
-    searchQuery.category = { $regex: query.category, $options: 'i' }; // Case-insensitive search for partial match
+  if (category) {
+    searchQuery.category = { $regex: category, $options: 'i' }; // Case-insensitive search for partial match
+  }
+  if (minPrice && maxPrice) {
+    searchQuery.price = { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) }; // Filter by price range
+  } else if (minPrice) {
+    searchQuery.price = { $gte: parseInt(minPrice) }; // Filter by minimum price
+  } else if (maxPrice) {
+    searchQuery.price = { $lte: parseInt(maxPrice) }; // Filter by maximum price
   }
 
   try {
