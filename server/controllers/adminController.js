@@ -18,10 +18,10 @@ const searchShopItems = async (req, res) => {
 
   // Construct the search query based on the request query parameters
   if (query.title) {
-    searchQuery.title = { $regex: new RegExp(query.title, 'i') }; // Case-insensitive search for partial match
+    searchQuery.title = { $regex: query.title, $options: 'i' }; // Case-insensitive search for partial match
   }
   if (query.category) {
-    searchQuery.category = { $regex: new RegExp(query.category, 'i') }; // Case-insensitive search for partial match
+    searchQuery.category = { $regex: query.category, $options: 'i' }; // Case-insensitive search for partial match
   }
 
   try {
