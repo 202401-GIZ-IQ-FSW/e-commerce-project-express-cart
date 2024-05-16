@@ -1,5 +1,5 @@
 const { default: mongoose } = require('mongoose');
-const ShopItemModel = require('../models/shopItemmodel');
+const ShopItemModel = require('../models/ShopItemModel');
 const { getUpdateFields } = require('../util/getUpdatedFields');
 
 // get all shop items
