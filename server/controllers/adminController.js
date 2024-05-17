@@ -12,9 +12,27 @@ const getAllShopItems = async (req, res) => {
   }
 };
 
+// get a shop item by ID
+const getShopItemById = async (req, res) => {
+  const itemId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
+    return res.status(404).json({ message: 'Invalid item ID' });
+  }
+  try {
+    const shopItem = await ShopItemModel.findById(itemId);
+    if (!shopItem) {
+      return res.status(404).json({ message: 'Shop item not found' });
+    }
+    res.json(shopItem);
+  } catch (error) {
+    res.status(422).json({ message: error.message });
+  }
+};
+
 const searchShopItems = async (req, res) => {
   const { title, category } = req.query;
   const searchQuery = {};
+  
   // Check if necessary query parameters are provided
   if (!title && !category) {
     return res.status(400).json({ message: 'Please provide a title or category to search' });
@@ -101,14 +119,14 @@ const addShopItem = async (req, res) => {
 
 // update a shop item's details - any passed fields will be updated
 const updateShopItem = async (req, res) => {
-  const postId = req.params.id;
+  const itemId = req.params.id;
   // return early if the passed id doesn't match mongoose object ids structure
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res.status(404).json({ message: 'Invalid item ID' });
   }
   const updatedFields = getUpdateFields(req.body);
   try {
-    const updatedShopItem = await ShopItemModel.findByIdAndUpdate(postId, updatedFields, { new: true });
+    const updatedShopItem = await ShopItemModel.findByIdAndUpdate(itemId, updatedFields, { new: true });
     if (!updatedShopItem) {
       return res.status(404).json({ message: "The shop item you are trying to update wasn't found" });
     }
@@ -121,12 +139,12 @@ const updateShopItem = async (req, res) => {
 
 // remove a shop item
 const removeShopItem = async (req, res) => {
-  const postId = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
+  const itemId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res.status(404).json({ message: 'Invalid item ID' });
   }
   try {
-    const shopItem = await ShopItemModel.findByIdAndDelete(postId);
+    const shopItem = await ShopItemModel.findByIdAndDelete(itemId);
     if (!shopItem) {
       res.status(404).json({ message: "The item you are trying to delete wasn't found" });
     } else {
@@ -140,6 +158,7 @@ const removeShopItem = async (req, res) => {
 module.exports = {
   addShopItem,
   getAllShopItems,
+  getShopItemById,
   removeShopItem,
   updateShopItem,
   searchShopItems,
