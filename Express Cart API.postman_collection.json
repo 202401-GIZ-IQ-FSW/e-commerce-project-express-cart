@@ -7,101 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Authentication Routes",
-			"item": [
-				{
-					"name": "Admin Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/admin/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"admin",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Admin Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/admin/logout",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"admin",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Customer Registration",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/customer/register",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"customer",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Customer Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/customer/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"customer",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Customer Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/customer/logout",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"customer",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Shop Item Routes",
 			"item": [
 				{
@@ -135,9 +40,17 @@
 								"shop-items",
 								":id"
 							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
 							"variable": [
 								{
-									"key": "id"
+									"key": "id",
+									"value": "6643cc6e6bb6b76cbce379ce"
 								}
 							]
 						}
@@ -150,13 +63,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/shop-items/search",
+							"raw": "{{base_url}}/shop-items/search?title=towel&category=fresh",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"shop-items",
 								"search"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "towel"
+								},
+								{
+									"key": "category",
+									"value": "fresh"
+								}
 							]
 						}
 					},
@@ -168,17 +91,154 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/shop-items/filter",
+							"raw": "{{base_url}}/shop-items/filter?minPrice=100&maxPrice=500&available=true&category=fresh",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"shop-items",
 								"filter"
+							],
+							"query": [
+								{
+									"key": "minPrice",
+									"value": "100"
+								},
+								{
+									"key": "maxPrice",
+									"value": "500"
+								},
+								{
+									"key": "available",
+									"value": "true"
+								},
+								{
+									"key": "category",
+									"value": "fresh"
+								}
 							]
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication Routes",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Admin Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/admin/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"admin",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/admin/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"admin",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "Customer Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"address\": \"{{$randomStreetAddress}}\",\r\n  \"gender\": \"male\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/customer/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"customer",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/customer/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"customer",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer Logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/customer/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"customer",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -190,17 +250,36 @@
 					"item": [
 						{
 							"name": "Get the customer's cart",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
 							"request": {
 								"method": "GET",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{base_url}}/customer/cart",
+									"raw": "{{base_url}}/customer/cart/:customerId",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"customer",
-										"cart"
+										"cart",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "664798c7b4f0d271717e001d"
+										}
 									]
 								}
 							},
@@ -213,7 +292,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"customerId\": 1,\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\",\r\n    \"quantity\": 1\r\n}",
+									"raw": "{\r\n    \"customerId\": \"664798c7b4f0d271717e001d\",\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\",\r\n    \"quantity\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
