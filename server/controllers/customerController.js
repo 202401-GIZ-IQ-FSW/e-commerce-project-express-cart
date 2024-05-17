@@ -57,6 +57,35 @@ const addToCart = async (req, res) => {
   }
 };
 
+const removeFromCart = async (req, res) => {
+  const { customerId, itemId } = req.body;
+
+  try {
+    const customer = await CustomerModel.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    const cartItemIndex = customer.cart.findIndex((item) => item.item.toString() === itemId);
+    if (cartItemIndex === -1) {
+      return res.status(404).json({ message: 'Item not found in cart' });
+    }
+
+    // Decrement the quantity or remove the item if quantity is less than 1
+    if (customer.cart[cartItemIndex].quantity > 1) {
+      customer.cart[cartItemIndex].quantity -= 1;
+    } else {
+      customer.cart.splice(cartItemIndex, 1);
+    }
+
+    await customer.save();
+
+    res.status(200).json({ message: 'Cart updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
 const handleCheckout = async (req, res) => {
   const { customerId } = req.body;
   try {
@@ -96,4 +125,5 @@ module.exports = {
   addToCart,
   handleCheckout,
   registerCustomer,
+  removeFromCart,
 };
