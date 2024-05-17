@@ -89,11 +89,13 @@ const removeFromCart = async (req, res) => {
 const handleCheckout = async (req, res) => {
   const { customerId } = req.body;
   try {
-    // const customer = await CustomerModel.findById(customerId).populate('cart.item');
-    const customer = await CustomerModel.findById(customerId);
+    // Populate the cart items with full item details
+    const customer = await CustomerModel.findById(customerId).populate('cart.item');
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
+
+    // Prepare the order items and calculate the total bill
     const orderItems = customer.cart.map((cartItem) => ({
       item: cartItem.item._id,
       quantity: cartItem.quantity,
@@ -104,7 +106,8 @@ const handleCheckout = async (req, res) => {
       0
     );
 
-    const order = OrderModel.create({
+    // Create and save the order
+    const order = new OrderModel({
       items: orderItems,
       totalBill,
       customer: customerId,
