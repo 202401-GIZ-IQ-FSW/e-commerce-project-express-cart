@@ -1,5 +1,5 @@
 const { default: mongoose } = require('mongoose');
-const ShopItemModel = require('../models/shopItemmodel');
+const ShopItemModel = require('../models/ShopItemModel');
 const { getUpdateFields } = require('../util/getUpdatedFields');
 
 // get all shop items
@@ -12,20 +12,86 @@ const getAllShopItems = async (req, res) => {
   }
 };
 
+// get a shop item by ID
+const getShopItemById = async (req, res) => {
+  const itemId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
+    return res.status(404).json({ message: 'Invalid item ID' });
+  }
+  try {
+    const shopItem = await ShopItemModel.findById(itemId);
+    if (!shopItem) {
+      return res.status(404).json({ message: 'Shop item not found' });
+    }
+    res.json(shopItem);
+  } catch (error) {
+    res.status(422).json({ message: error.message });
+  }
+};
+
 const searchShopItems = async (req, res) => {
-  const query = req.query;
+  const { title, category } = req.query;
   const searchQuery = {};
+  
+  // Check if necessary query parameters are provided
+  if (!title && !category) {
+    return res.status(400).json({ message: 'Please provide a title or category to search' });
+  }
 
   // Construct the search query based on the request query parameters
-  if (query.title) {
-    searchQuery.title = { $regex: query.title, $options: 'i' }; // Case-insensitive search for partial match
+  if (title) {
+    searchQuery.title = { $regex: title, $options: 'i' }; // Case-insensitive search for partial match
   }
-  if (query.category) {
-    searchQuery.category = { $regex: query.category, $options: 'i' }; // Case-insensitive search for partial match
+  if (category) {
+    searchQuery.category = { $regex: category, $options: 'i' }; // Case-insensitive search for partial match
   }
 
   try {
     const shopItems = await ShopItemModel.find(searchQuery);
+    if (shopItems.length === 0) {
+      return res.status(404).json({ message: 'No items found' });
+    }
+    res.json(shopItems);
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+const filterShopItems = async (req, res) => {
+  const { minPrice, maxPrice, category, available } = req.query;
+  const filterQuery = {};
+
+  // Check if necessary query parameters are provided
+  if (!minPrice && !maxPrice && !category && available === undefined) {
+    return res.status(400).json({
+      message: 'Please provide at least one filter criteria (minPrice, maxPrice, category, or available)',
+    });
+  }
+
+  // Construct the filter query based on the request query parameters
+  if (minPrice && maxPrice) {
+    filterQuery.price = { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) }; // Filter by price range
+  } else if (minPrice) {
+    filterQuery.price = { $gte: parseInt(minPrice) }; // Filter by minimum price
+  } else if (maxPrice) {
+    filterQuery.price = { $lte: parseInt(maxPrice) }; // Filter by maximum price
+  }
+
+  if (category) {
+    filterQuery.category = { $regex: category, $options: 'i' }; // Case-insensitive filter by category
+  }
+
+  if (available !== undefined) {
+    filterQuery.availableCount = available === 'true' ? { $gt: 0 } : 0; // Filter by availability
+  }
+
+  try {
+    const shopItems = await ShopItemModel.find(filterQuery);
+
+    if (shopItems.length === 0) {
+      return res.status(404).json({ message: 'No items found matching the criteria' });
+    }
+
     res.json(shopItems);
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
@@ -53,14 +119,14 @@ const addShopItem = async (req, res) => {
 
 // update a shop item's details - any passed fields will be updated
 const updateShopItem = async (req, res) => {
-  const postId = req.params.id;
+  const itemId = req.params.id;
   // return early if the passed id doesn't match mongoose object ids structure
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res.status(404).json({ message: 'Invalid item ID' });
   }
   const updatedFields = getUpdateFields(req.body);
   try {
-    const updatedShopItem = await ShopItemModel.findByIdAndUpdate(postId, updatedFields, { new: true });
+    const updatedShopItem = await ShopItemModel.findByIdAndUpdate(itemId, updatedFields, { new: true });
     if (!updatedShopItem) {
       return res.status(404).json({ message: "The shop item you are trying to update wasn't found" });
     }
@@ -73,12 +139,12 @@ const updateShopItem = async (req, res) => {
 
 // remove a shop item
 const removeShopItem = async (req, res) => {
-  const postId = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
+  const itemId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res.status(404).json({ message: 'Invalid item ID' });
   }
   try {
-    const shopItem = await ShopItemModel.findByIdAndDelete(postId);
+    const shopItem = await ShopItemModel.findByIdAndDelete(itemId);
     if (!shopItem) {
       res.status(404).json({ message: "The item you are trying to delete wasn't found" });
     } else {
@@ -92,7 +158,9 @@ const removeShopItem = async (req, res) => {
 module.exports = {
   addShopItem,
   getAllShopItems,
+  getShopItemById,
   removeShopItem,
   updateShopItem,
   searchShopItems,
+  filterShopItems,
 };
