@@ -7,9 +7,9 @@ const {
   getShopItemById,
 } = require('../controllers/shopItemsController');
 
-router.get('/shop-items', getAllShopItems);
-router.get('/shop-items/:id', getShopItemById);
-router.get('/shop-items/search', searchShopItems);
-router.get('/shop-items/filter', filterShopItems);
+router.get('/search', searchShopItems);
+router.get('/filter', filterShopItems);
+router.get('/:id', getShopItemById);
+router.get('/', getAllShopItems);
 
 module.exports = router;

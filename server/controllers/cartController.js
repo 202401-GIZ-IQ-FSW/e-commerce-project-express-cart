@@ -2,6 +2,21 @@ const CustomerModel = require('../models/CustomerModel');
 const OrderModel = require('../models/OrderModel');
 const ShopItemModel = require('../models/ShopItemModel');
 
+const getCustomerCart = async (req, res) => {
+  const { customerId } = req.params;
+
+  try {
+    const customer = await CustomerModel.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    res.status(200).json({ cart: customer.cart });
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
 const addToCart = async (req, res) => {
   const { customerId, itemId, quantity } = req.body;
 
@@ -110,4 +125,5 @@ module.exports = {
   addToCart,
   removeFromCart,
   handleCheckout,
+  getCustomerCart,
 };
