@@ -131,6 +131,13 @@
       "name": "Authentication Routes",
       "item": [
         {
+          "name": "Admin Registration",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/admin/register"
+          }
+        },
+        {
           "name": "Admin Login",
           "request": {
             "method": "POST",
@@ -142,6 +149,13 @@
           "request": {
             "method": "POST",
             "url": "{{base_url}}/admin/logout"
+          }
+        },
+        {
+          "name": "Customer Registration",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/customer/register"
           }
         },
         {

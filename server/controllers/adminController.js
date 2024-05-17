@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const ShopItemModel = require('../models/ShopItemModel');
 const { getUpdateFields } = require('../util/getUpdatedFields');
+const CustomerModel = require('../models/CustomerModel');
 
 // get all shop items
 const getAllShopItems = async (req, res) => {
@@ -32,7 +33,7 @@ const getShopItemById = async (req, res) => {
 const searchShopItems = async (req, res) => {
   const { title, category } = req.query;
   const searchQuery = {};
-  
+
   // Check if necessary query parameters are provided
   if (!title && !category) {
     return res.status(400).json({ message: 'Please provide a title or category to search' });
@@ -155,6 +156,15 @@ const removeShopItem = async (req, res) => {
   }
 };
 
+const getAllCustomers = async (req, res) => {
+  try {
+    const customers = await CustomerModel.find()
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
 module.exports = {
   addShopItem,
   getAllShopItems,
@@ -163,4 +173,5 @@ module.exports = {
   updateShopItem,
   searchShopItems,
   filterShopItems,
+  getAllCustomers,
 };

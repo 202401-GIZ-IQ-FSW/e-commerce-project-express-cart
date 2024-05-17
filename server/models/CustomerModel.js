@@ -15,7 +15,12 @@ const customerSchema = new Schema(
     address: String,
     gender: String,
     orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
-    cart: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
+    cart: [
+      {
+        item: { type: Schema.Types.ObjectId, ref: 'ShopItem' },
+        quantity: { type: Number, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );
