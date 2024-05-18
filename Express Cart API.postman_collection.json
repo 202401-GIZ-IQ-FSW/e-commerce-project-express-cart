@@ -266,14 +266,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/customer/cart/:customerId",
+									"raw": "{{base_url}}/customer/:customerId/cart",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"customer",
-										"cart",
-										":customerId"
+										":customerId",
+										"cart"
 									],
 									"variable": [
 										{
@@ -317,6 +317,15 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"customerId\": \"664798c7b4f0d271717e001d\",\r\n  \"itemId\": \"6643cc6e6bb6b76cbce379ce\",\r\n  \"quantity\": 15\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{base_url}}/customer/cart",
 									"host": [
@@ -335,6 +344,15 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"customerId\": \"664798c7b4f0d271717e001d\",\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{base_url}}/customer/cart",
 									"host": [
@@ -396,6 +414,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"664798c7b4f0d271717e001d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}/customer/checkout",
 							"host": [
@@ -415,13 +442,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/customer/orders",
+							"raw": "{{base_url}}/customer/:customerId/orders",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"customer",
+								":customerId",
 								"orders"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "664798c7b4f0d271717e001d"
+								}
 							]
 						}
 					},
