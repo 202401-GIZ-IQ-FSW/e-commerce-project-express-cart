@@ -5,6 +5,7 @@ const {
   updateShopItem,
   removeShopItem,
   getAllCustomers,
+  getAllOrders,
 } = require('../controllers/adminController');
 
 router.post('/shop-items', addShopItem);
@@ -13,5 +14,6 @@ router.delete('/shop-items/:id', removeShopItem);
 
 // get all customers
 router.get('/customers', getAllCustomers);
-
+// get all orders
+router.get('/orders', getAllOrders);
 module.exports = router;

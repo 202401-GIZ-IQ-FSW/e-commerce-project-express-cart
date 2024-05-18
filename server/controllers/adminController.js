@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const ShopItemModel = require('../models/ShopItemModel');
 const { getUpdateFields } = require('../util/getUpdatedFields');
 const CustomerModel = require('../models/CustomerModel');
+const OrderModel = require('../models/OrderModel');
 
 // create a new shop item
 const addShopItem = async (req, res) => {
@@ -69,9 +70,20 @@ const getAllCustomers = async (req, res) => {
   }
 };
 
+// get all orders ever made with associated customers
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await OrderModel.find().populate('customer').populate('items.item');
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
+
 module.exports = {
   addShopItem,
   removeShopItem,
   updateShopItem,
   getAllCustomers,
+  getAllOrders,
 };
