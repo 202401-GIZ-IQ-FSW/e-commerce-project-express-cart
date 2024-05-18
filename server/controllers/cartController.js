@@ -27,8 +27,8 @@ const addToCart = async (req, res) => {
     }
 
     const shopItem = await ShopItemModel.findById(itemId);
-    if (!shopItem || shopItem.availableCount < quantity) {
-      return res.status(400).json({ message: 'Item not available in sufficient quantity' });
+    if (!shopItem) {
+      return res.status(400).json({ message: 'Item not found' });
     }
 
     // Check if the item already exists in the cart
@@ -40,10 +40,6 @@ const addToCart = async (req, res) => {
       // Add new item to the cart
       customer.cart.push({ item: itemId, quantity });
     }
-
-    // Decrement the available count
-    shopItem.availableCount -= quantity;
-    await shopItem.save();
 
     // Save the updated customer
     await customer.save();
@@ -92,6 +88,11 @@ const handleCheckout = async (req, res) => {
       return res.status(404).json({ message: 'Customer not found' });
     }
 
+    // Check if the cart is empty
+    if (customer.cart.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
     // Prepare the order items and calculate the total bill
     const orderItems = customer.cart.map((cartItem) => ({
       item: cartItem.item._id,
@@ -102,6 +103,23 @@ const handleCheckout = async (req, res) => {
       (total, cartItem) => total + cartItem.item.price * cartItem.quantity,
       0
     );
+
+    // Check if all items are available in the required quantity before finalizing the order
+    for (const cartItem of customer.cart) {
+      const shopItem = await ShopItemModel.findById(cartItem.item._id);
+      if (!shopItem || shopItem.availableCount < cartItem.quantity) {
+        return res
+          .status(400)
+          .json({ message: `Item ${shopItem.title} not available in sufficient quantity` });
+      }
+    }
+
+    // Deduct the items from the inventory
+    for (const cartItem of customer.cart) {
+      const shopItem = await ShopItemModel.findById(cartItem.item._id);
+      shopItem.availableCount -= cartItem.quantity;
+      await shopItem.save();
+    }
 
     // Create and save the order
     const order = new OrderModel({
@@ -121,9 +139,25 @@ const handleCheckout = async (req, res) => {
   }
 };
 
+const getCustomerOrders = async (req, res) => {
+  const { customerId } = req.params;
+
+  try {
+    const orders = await OrderModel.find({ customer: customerId }).populate('items.item');
+    if (!orders) {
+      return res.status(404).json({ message: 'Orders not found' });
+    }
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
+
 module.exports = {
   addToCart,
   removeFromCart,
   handleCheckout,
   getCustomerCart,
+  getCustomerOrders,
 };
