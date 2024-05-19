@@ -1,7 +1,7 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const { passwordValidation } = require('../util/passwordValidation');
-// const bcrypt = require('bcrypt')
 
 const customerSchema = new Schema(
   {
@@ -23,6 +23,10 @@ const customerSchema = new Schema(
           'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a special character.',
       },
     },
+    refreshToken: {
+      type: String,
+      default: null,
+    },
     address: String,
     gender: String,
     cart: [
@@ -37,15 +41,15 @@ const customerSchema = new Schema(
 );
 
 // Hash the password before saving the customer
-// customerSchema.pre('save', async function (next) {
-//   // If the password hasn't been modified, proceed with the save operation without hashing the password again
-//   if (!this.isModified('password')) {
-//     return next();
-//   }
-//   const salt = await bcrypt.genSalt(10);
-//   this.password = await bcrypt.hash(this.password, salt);
-//   next();
-// });
+customerSchema.pre('save', async function (next) {
+  // If the password hasn't been modified, proceed with the save operation without hashing the password again
+  if (!this.isModified('password')) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
 const CustomerModel = mongoose.model('Customer', customerSchema);
 

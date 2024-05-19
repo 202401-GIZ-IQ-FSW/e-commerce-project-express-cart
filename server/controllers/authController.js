@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const CustomerModel = require('../models/CustomerModel');
 
 const registerCustomer = async (req, res) => {
@@ -40,4 +42,78 @@ const registerCustomer = async (req, res) => {
   }
 };
 
-module.exports = { registerCustomer };
+const handleLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  // Basic validation
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please provide email and password' });
+  }
+
+  try {
+    // Check if the email exists
+    const customer = await CustomerModel.findOne({ email });
+    if (!customer) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Compare the provided password with the hashed password in the database
+    const isMatch = await bcrypt.compare(password, customer.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate a JWT token
+    const accessToken = jwt.sign(
+      {
+        userInfo: {
+          email: customer.email,
+          id: customer._id,
+          roles: 'roles',
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Generate a refresh token
+    const refreshToken = jwt.sign(
+      {
+        email: customer.email,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    // Save the refresh token to the database
+    customer.refreshToken = refreshToken;
+    await customer.save();
+
+    // Set refresh token as HttpOnly cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000, // one day
+    });
+
+    // Exclude sensitive information from the response
+    const customerResponse = {
+      _id: customer._id,
+      name: customer.name,
+      email: customer.email,
+      address: customer.address,
+      gender: customer.gender,
+      cart: customer.cart,
+      orders: customer.orders,
+      createdAt: customer.createdAt,
+      updatedAt: customer.updatedAt,
+    };
+
+    res.status(200).json({ accessToken, customer: customerResponse });
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
+
+module.exports = { registerCustomer, handleLogin };
