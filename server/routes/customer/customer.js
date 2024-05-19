@@ -8,6 +8,6 @@ router.use('/', cartRoutes);
 
 // customer routes
 router.post('/checkout', handleCheckout);
-router.get('/:customerId/orders', getCustomerOrders);
+router.get('/orders', getCustomerOrders);
 
 module.exports = router;

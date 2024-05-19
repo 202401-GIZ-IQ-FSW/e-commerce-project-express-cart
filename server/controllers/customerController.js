@@ -3,7 +3,7 @@ const OrderModel = require('../models/OrderModel');
 const ShopItemModel = require('../models/ShopItemModel');
 
 const handleCheckout = async (req, res) => {
-  const { customerId } = req.body;
+  const  customerId  = req.user.id
   try {
     // Populate the cart items with full item details
     const customer = await CustomerModel.findById(customerId).populate('cart.item');
@@ -63,7 +63,8 @@ const handleCheckout = async (req, res) => {
 };
 
 const getCustomerOrders = async (req, res) => {
-  const { customerId } = req.params;
+  const customerId = req.user.id
+  console.log(customerId);
 
   try {
     const orders = await OrderModel.find({ customer: customerId }).populate('items.item');
