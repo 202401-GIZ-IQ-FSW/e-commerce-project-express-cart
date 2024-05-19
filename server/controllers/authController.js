@@ -73,7 +73,8 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '60s' }
+      // { expiresIn: '1h' }
     );
 
     // Generate a refresh token
@@ -116,4 +117,30 @@ const handleLogin = async (req, res) => {
   }
 };
 
-module.exports = { registerCustomer, handleLogin };
+const handleLogout = async (req, res) => {
+  // on client (frontend), also delete the accessToken upon logout
+  const cookies = req.cookies;
+  if (!cookies?.refreshToken) return res.sendStatus(204); // no content
+  const refreshToken = cookies.refreshToken;
+
+  try {
+    // Check if the refresh token exists in the database
+    const customer = await CustomerModel.findOne({ refreshToken });
+    if (!customer) {
+      res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
+      return res.sendStatus(204);
+    }
+
+    // Delete the refresh token from the database
+    customer.refreshToken = null;
+    await customer.save();
+
+    // Clear the refresh token cookie
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
+    res.sendStatus(204); // No content
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
+
+module.exports = { registerCustomer, handleLogin, handleLogout };
