@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const CustomerModel = require('../models/CustomerModel');
+const USER_ROLES = require('../config/userRoles');
 
-const registerCustomer = async (req, res) => {
+const handleRegistration = async (req, res) => {
   const { name, email, password, address, gender } = req.body;
 
   // Basic validation
@@ -18,7 +19,7 @@ const registerCustomer = async (req, res) => {
     }
 
     // Create a new customer
-    const customer = new CustomerModel({ name, email, password, address, gender });
+    const customer = new CustomerModel({ name, email, password, address, gender, role: USER_ROLES.Customer });
 
     // Save the customer to the database
     await customer.save();
@@ -62,14 +63,13 @@ const handleLogin = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-
     // Generate a JWT token
     const accessToken = jwt.sign(
       {
         userInfo: {
           email: customer.email,
           id: customer._id,
-          roles: 'roles',
+          role: customer.role,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -142,4 +142,4 @@ const handleLogout = async (req, res) => {
   }
 };
 
-module.exports = { registerCustomer, handleLogin, handleLogout };
+module.exports = { handleRegistration, handleLogin, handleLogout };
