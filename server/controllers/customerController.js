@@ -3,7 +3,7 @@ const OrderModel = require('../models/OrderModel');
 const ShopItemModel = require('../models/ShopItemModel');
 
 const handleCheckout = async (req, res) => {
-  const  customerId  = req.user.id
+  const customerId = req.user.id;
   try {
     // Populate the cart items with full item details
     const customer = await CustomerModel.findById(customerId).populate('cart.item');
@@ -63,8 +63,7 @@ const handleCheckout = async (req, res) => {
 };
 
 const getCustomerOrders = async (req, res) => {
-  const customerId = req.user.id
-  console.log(customerId);
+  const customerId = req.user.id;
 
   try {
     const orders = await OrderModel.find({ customer: customerId }).populate('items.item');
@@ -78,7 +77,45 @@ const getCustomerOrders = async (req, res) => {
   }
 };
 
+const getCustomerProfile = async (req, res) => {
+  const customerId = req.user.id;
+
+  try {
+    const customer = await CustomerModel.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+    res.status(200).json(customer);
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
+
+// Update customer profile
+const updateCustomerProfile = async (req, res) => {
+  const customerId = req.user.id;
+  const { name, address, gender } = req.body;
+
+  try {
+    let customer = await CustomerModel.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    customer.name = name || customer.name;
+    customer.address = address || customer.address;
+    customer.gender = gender || customer.gender;
+
+    await customer.save();
+
+    res.status(200).json(customer);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 module.exports = {
   handleCheckout,
   getCustomerOrders,
+  getCustomerProfile,
+  updateCustomerProfile,
 };

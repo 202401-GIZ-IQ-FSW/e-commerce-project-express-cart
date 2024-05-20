@@ -3,7 +3,7 @@ const OrderModel = require('../models/OrderModel');
 const ShopItemModel = require('../models/ShopItemModel');
 
 const getCart = async (req, res) => {
-  const { customerId } = req.params;
+  const customerId = req.user.id;
 
   try {
     const customer = await CustomerModel.findById(customerId);
@@ -18,8 +18,8 @@ const getCart = async (req, res) => {
 };
 
 const addToCart = async (req, res) => {
-  const { customerId, itemId, quantity } = req.body;
-
+  const customerId = req.user.id;
+  const { itemId, quantity } = req.body;
   try {
     const customer = await CustomerModel.findById(customerId);
     if (!customer) {
@@ -51,7 +51,9 @@ const addToCart = async (req, res) => {
 };
 
 const updateCart = async (req, res) => {
-  const { customerId, itemId, quantity } = req.body;
+  const customerId = req.user.id;
+
+  const { itemId, quantity } = req.body;
 
   try {
     const customer = await CustomerModel.findById(customerId);
@@ -83,7 +85,8 @@ const updateCart = async (req, res) => {
 };
 
 const removeFromCart = async (req, res) => {
-  const { customerId, itemId } = req.body;
+  const customerId = req.user.id;
+  const { itemId } = req.body;
 
   try {
     const customer = await CustomerModel.findById(customerId);

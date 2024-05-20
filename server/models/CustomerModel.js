@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const { passwordValidation } = require('../util/passwordValidation');
+const USER_ROLES = require('../config/userRoles');
 
 const customerSchema = new Schema(
   {
@@ -26,6 +27,10 @@ const customerSchema = new Schema(
     refreshToken: {
       type: String,
       default: null,
+    },
+    role: {
+      type: Number,
+      default: USER_ROLES.Customer, // Default role is Customer
     },
     address: String,
     gender: String,
