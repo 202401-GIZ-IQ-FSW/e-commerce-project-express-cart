@@ -179,7 +179,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"address\": \"{{$randomStreetAddress}}\",\r\n  \"gender\": \"male\"\r\n}\r\n",
+									"raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"address\": \"{{$randomStreetAddress}}\",\r\n  \"gender\": \"male\",\r\n  \"password\": \"Pass@word8\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -205,6 +205,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n \"email\": \"Mallie_Shields@gmail.com\",\r\n \"password\": \"Pass@word8\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{base_url}}/auth/customer/login",
 									"host": [
@@ -266,20 +275,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/customer/:customerId/cart",
+									"raw": "{{base_url}}/customer/cart",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"customer",
-										":customerId",
 										"cart"
-									],
-									"variable": [
-										{
-											"key": "customerId",
-											"value": "664798c7b4f0d271717e001d"
-										}
 									]
 								}
 							},
@@ -292,7 +294,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"customerId\": \"664798c7b4f0d271717e001d\",\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\",\r\n    \"quantity\": 1\r\n}",
+									"raw": "{\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\",\r\n    \"quantity\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -416,7 +418,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"customerId\": \"664798c7b4f0d271717e001d\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -442,20 +444,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/customer/:customerId/orders",
+							"raw": "{{base_url}}/customer/orders",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"customer",
-								":customerId",
 								"orders"
-							],
-							"variable": [
-								{
-									"key": "customerId",
-									"value": "664798c7b4f0d271717e001d"
-								}
 							]
 						}
 					},
@@ -592,6 +587,38 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJlbWFpbCI6Ik1hbGxpZV9TaGllbGRzQGdtYWlsLmNvbSIsImlkIjoiNjY0YTVkMmZmNTdkZTc4ZjZmYjk5Y2QwIiwicm9sZSI6MzAxfSwiaWF0IjoxNzE2MjM3NDAwLCJleHAiOjE3MTYyNDEwMDB9.1GjAaPhgdudMi8vSc8OME4a0QM3HQcLS2qc3Zo3jXSE",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
