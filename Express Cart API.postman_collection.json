@@ -130,10 +130,47 @@
 					"name": "Admin",
 					"item": [
 						{
+							"name": "Admin Registration (temporary)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Ninos\",\r\n    \"email\": \"ninos.dinkha@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/admin/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"admin",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Admin Login",
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ninos.dinkha@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{base_url}}/auth/admin/login",
 									"host": [
@@ -542,6 +579,106 @@
 					]
 				},
 				{
+					"name": "Admin Account (temporary)",
+					"item": [
+						{
+							"name": "Create a new admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/new-admin",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"new-admin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all admins",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/admins",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"admins"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove admin",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/admins/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"admins",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "664cb62578108750ffe6dd80"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update admin details",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ninos.dinkha97@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/admins/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"admins",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "664cba5373ecbea4a81c6a36"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get all orders",
 					"request": {
 						"method": "GET",
@@ -576,24 +713,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Create a new admin",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/admin/new-admin",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"admin",
-								"new-admin"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}
@@ -603,7 +722,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJlbWFpbCI6Ik1hbGxpZV9TaGllbGRzQGdtYWlsLmNvbSIsImlkIjoiNjY0YTVkMmZmNTdkZTc4ZjZmYjk5Y2QwIiwicm9sZSI6MzAxfSwiaWF0IjoxNzE2MjM3NDAwLCJleHAiOjE3MTYyNDEwMDB9.1GjAaPhgdudMi8vSc8OME4a0QM3HQcLS2qc3Zo3jXSE",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJpZCI6IjY2NGNiYTUzNzNlY2JlYTRhODFjNmEzNiIsInJvbGUiOjIwMX0sImlhdCI6MTcxNjMwNTE2OCwiZXhwIjoxNzE2MzA4NzY4fQ.G2Z_H0PyJvk_F58Ik2sTnmM5ajbSp47Qg0VGLrCpC2c",
 				"type": "string"
 			}
 		]

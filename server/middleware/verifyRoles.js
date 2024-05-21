@@ -4,9 +4,9 @@ const verifyRoles = (...allowedRoles) => {
 
     const rolesArray = [...allowedRoles];
     console.log(rolesArray);
-    console.log(req?.role);
+    console.log(req?.user?.role);
 
-    const result = rolesArray.includes(req.role);
+    const result = rolesArray.includes(req.user.role);
     if (!result) return res.sendStatus(401);
     next();
   };

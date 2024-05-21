@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const cartRoutes = require('./cart');
+const customerAuthRoutes = require('../auth/customerAuth');
+
 const {
   handleCheckout,
   getCustomerOrders,
@@ -8,10 +10,10 @@ const {
   updateCustomerProfile,
 } = require('../../controllers/customerController');
 
-// cart routes
+// customer cart routes
 router.use('/cart', cartRoutes);
 
-// customer routes
+// customer functionalities routes
 router.post('/checkout', handleCheckout);
 router.get('/orders', getCustomerOrders);
 router.get('/profile', getCustomerProfile);

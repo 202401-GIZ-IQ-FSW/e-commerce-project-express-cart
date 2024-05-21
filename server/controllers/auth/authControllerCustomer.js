@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const CustomerModel = require('../models/CustomerModel');
-const USER_ROLES = require('../config/userRoles');
+const CustomerModel = require('../../models/CustomerModel');
+const USER_ROLES = require('../../config/userRoles');
 
 const handleRegistration = async (req, res) => {
   const { name, email, password, address, gender } = req.body;
@@ -67,7 +67,6 @@ const handleLogin = async (req, res) => {
     const accessToken = jwt.sign(
       {
         userInfo: {
-          email: customer.email,
           id: customer._id,
           role: customer.role,
         },
@@ -79,7 +78,8 @@ const handleLogin = async (req, res) => {
     // Generate a refresh token
     const refreshToken = jwt.sign(
       {
-        email: customer.email,
+        id: customer._id,
+        role: customer.role,
       },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '1d' }
