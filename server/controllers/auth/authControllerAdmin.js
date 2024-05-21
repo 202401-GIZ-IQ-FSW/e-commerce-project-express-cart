@@ -54,7 +54,8 @@ const adminLogout = async (req, res) => {
     admin.refreshToken = null;
     await admin.save();
 
-    res.clearCookie('refreshToken');
+    // Clear the refresh token cookie
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
     res.json({ message: 'Signed out successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -102,11 +103,30 @@ const removeAdmin = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+const updateAdmin = async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body;
 
+  try {
+    const admin = await AdminModel.findById(id);
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
+
+    if (name) admin.name = name;
+    if (email) admin.email = email;
+
+    await admin.save();
+    const { password, refreshToken, ...adminData } = admin._doc;
+
+    res.status(200).json(adminData);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 module.exports = {
   adminLogin,
   adminLogout,
   createAdmin,
   getAllAdmins,
   removeAdmin,
+  updateAdmin,
 };

@@ -8,7 +8,7 @@ const {
   getAllCustomers,
   getAllOrders,
 } = require('../../controllers/adminController');
-const { getAllAdmins, removeAdmin } = require('../../controllers/auth/authControllerAdmin');
+const { getAllAdmins, removeAdmin, updateAdmin } = require('../../controllers/auth/authControllerAdmin');
 
 // admin shop items CRUD
 router.post('/shop-items', addShopItem);
@@ -23,5 +23,6 @@ router.get('/orders', getAllOrders);
 // admin accounts
 router.get('/admins', getAllAdmins);
 router.delete('/admins/:id', removeAdmin);
+router.patch('/admins/:id', updateAdmin);
 
 module.exports = router;
