@@ -81,10 +81,15 @@ const getCustomerProfile = async (req, res) => {
   const customerId = req.user.id;
 
   try {
-    const customer = await CustomerModel.findById(customerId);
+    const customer = await CustomerModel.findById(customerId)
+      .populate('cart.item')
+      .populate('orders')
+      .select('-password -refreshToken -role'); // Exclude these fields
+
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
+
     res.status(200).json(customer);
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
@@ -97,7 +102,7 @@ const updateCustomerProfile = async (req, res) => {
   const { name, address, gender } = req.body;
 
   try {
-    let customer = await CustomerModel.findById(customerId);
+    let customer = await CustomerModel.findById(customerId).select('-refreshToken -role'); // exclude
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
@@ -110,9 +115,10 @@ const updateCustomerProfile = async (req, res) => {
 
     res.status(200).json(customer);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
 module.exports = {
   handleCheckout,
   getCustomerOrders,

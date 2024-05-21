@@ -25,19 +25,9 @@ const handleRegistration = async (req, res) => {
     await customer.save();
 
     // Exclude password from the response
-    const customerResponse = {
-      _id: customer._id,
-      name: customer.name,
-      email: customer.email,
-      address: customer.address,
-      gender: customer.gender,
-      cart: customer.cart,
-      orders: customer.orders,
-      createdAt: customer.createdAt,
-      updatedAt: customer.updatedAt,
-    };
+    const { password: _, ...customerData } = customer._doc;
 
-    res.status(201).json(customerResponse);
+    res.status(201).json({ message: 'Customer created successfully', customer: customerData });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
   }

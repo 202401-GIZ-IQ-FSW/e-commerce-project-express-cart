@@ -35,8 +35,8 @@ const adminLogin = async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000, // one day
     });
-    // Exclude password and refreshToken from the response
-    const { password: _, refreshToken: __, ...adminData } = admin._doc;
+    // Exclude password, role, and refreshToken from the response
+    const { password: _password, refreshToken: _refreshToken, role: _role, ...adminData } = admin._doc;
 
     res.json({ accessToken, admin: adminData });
   } catch (error) {
