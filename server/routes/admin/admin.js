@@ -7,6 +7,7 @@ const {
   removeShopItem,
   getAllCustomers,
   getAllOrders,
+  removeCustomer,
 } = require('../../controllers/adminController');
 const { getAllAdmins, removeAdmin, updateAdmin } = require('../../controllers/auth/authControllerAdmin');
 
@@ -17,6 +18,8 @@ router.delete('/shop-items/:id', removeShopItem);
 
 // get all customers
 router.get('/customers', getAllCustomers);
+// remove a customer
+router.delete('/customers/:id', removeCustomer);
 // get all orders
 router.get('/orders', getAllOrders);
 
