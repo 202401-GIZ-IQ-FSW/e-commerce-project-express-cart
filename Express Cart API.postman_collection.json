@@ -164,7 +164,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"ninos.dinkha@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
+									"raw": "{\r\n    \"email\": \"ninos.dinkha97@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -244,7 +244,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{ \r\n \"email\": \"Mallie_Shields@gmail.com\",\r\n \"password\": \"Pass@word8\"\r\n}",
+									"raw": "{ \r\n \"email\": \"Emily.Goodwin27@gmail.com\",\r\n \"password\": \"Pass@word8new\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -331,7 +331,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\",\r\n    \"quantity\": 1\r\n}",
+									"raw": "{\r\n    \"itemId\": \"66451f703ba5d62efb19ebe5\",\r\n    \"quantity\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -435,7 +435,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Chris\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Christopher\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -450,6 +450,34 @@
 									"path": [
 										"customer",
 										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change password",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"currentPassword\": \"Pass@word8\",\r\n\"newPassword\": \"Pass@word8new\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/customer/profile/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"customer",
+										"profile",
+										"change-password"
 									]
 								}
 							},
@@ -515,6 +543,15 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"{{$randomProductName}}\",\r\n  \"image\": \"{{$randomImageUrl}}\",\r\n  \"price\": {{$randomPrice}},\r\n  \"description\": \"{{$randomLoremParagraph}}\",\r\n  \"availableCount\": \"{{$randomInt}}\",\r\n  \"category\": \"{{$randomProductAdjective}}\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{base_url}}/admin/shop-items",
 									"host": [
@@ -533,6 +570,15 @@
 							"request": {
 								"method": "PATCH",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Plastic Towels\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{base_url}}/admin/shop-items/:id",
 									"host": [
@@ -545,7 +591,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "664d105c1fafe7e112822b2f"
 										}
 									]
 								}
@@ -579,26 +626,74 @@
 					]
 				},
 				{
-					"name": "Admin Account (temporary)",
+					"name": "Customers",
 					"item": [
 						{
-							"name": "Create a new admin",
+							"name": "Get all customers",
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/new-admin",
+									"raw": "{{base_url}}/admin/customers",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"admin",
-										"new-admin"
+										"customers"
 									]
 								}
 							},
 							"response": []
 						},
+						{
+							"name": "Remove Customer",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/customers/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"customers",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "664d03963614a2b637e21ca9"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/orders",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admins",
+					"item": [
 						{
 							"name": "Get all admins",
 							"request": {
@@ -618,25 +713,18 @@
 							"response": []
 						},
 						{
-							"name": "Remove admin",
+							"name": "Create a new admin",
 							"request": {
-								"method": "DELETE",
+								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/admins/:id",
+									"raw": "{{base_url}}/admin/new-admin",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"admin",
-										"admins",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "664cb62578108750ffe6dd80"
-										}
+										"new-admin"
 									]
 								}
 							},
@@ -675,44 +763,33 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Remove admin",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/admin/admins/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"admins",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "664cb62578108750ffe6dd80"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
-				},
-				{
-					"name": "Get all orders",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/admin/orders",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"admin",
-								"orders"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all customers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/admin/customers",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"admin",
-								"customers"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}
@@ -722,7 +799,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJpZCI6IjY2NGNiYTUzNzNlY2JlYTRhODFjNmEzNiIsInJvbGUiOjIwMX0sImlhdCI6MTcxNjMwNTE2OCwiZXhwIjoxNzE2MzA4NzY4fQ.G2Z_H0PyJvk_F58Ik2sTnmM5ajbSp47Qg0VGLrCpC2c",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJpZCI6IjY2NGNiYTUzNzNlY2JlYTRhODFjNmEzNiIsInJvbGUiOjIwMX0sImlhdCI6MTcxNjMyNjA1NSwiZXhwIjoxNzE2MzI5NjU1fQ.WDuGZhIMeLJGm9UpLBpBxr26GozKtfdis5X8RtFc6aE",
 				"type": "string"
 			}
 		]
@@ -752,7 +829,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:3000",
+			"value": "http://localhost:3000/api/v1",
 			"type": "string"
 		}
 	]
