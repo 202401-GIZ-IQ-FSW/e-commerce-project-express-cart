@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+    <style>
+      .login-container {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .login-box {
+        max-width: 400px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container login-container">
+      <div class="box login-box">
+        <h1 class="title has-text-centered">Login</h1>
+        <form id="loginForm">
+          <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+              <input
+                id="email"
+                class="input"
+                type="email"
+                placeholder="Enter your email"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input
+                id="password"
+                class="input"
+                type="password"
+                placeholder="Enter your password"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button type="submit" class="button is-primary is-fullwidth">
+                Login
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <div id="result" class="notification is-hidden"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const resultDiv = document.getElementById("result");
+
+          // Clear any previous messages
+          resultDiv.classList.add("is-hidden");
+          resultDiv.textContent = "";
+
+          try {
+            const response = await fetch("/auth/customer/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+              const data = await response.json();
+              throw new Error(data.error || data.message);
+            }
+
+            const data = await response.json();
+
+            // Handle the response data
+            resultDiv.classList.remove("is-hidden");
+            resultDiv.classList.add("is-success");
+            resultDiv.textContent = `You are now logged in`;
+          } catch (error) {
+            resultDiv.classList.remove("is-hidden");
+            resultDiv.classList.add("is-danger");
+            resultDiv.textContent = `${error.message}`;
+          }
+        });
+    </script>
+  </body>
+</html>
