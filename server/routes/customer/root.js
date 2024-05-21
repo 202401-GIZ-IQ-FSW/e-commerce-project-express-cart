@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const cartRoutes = require('./cart');
-const customerAuthRoutes = require('../auth/customerAuth');
 
 const {
   handleCheckout,
