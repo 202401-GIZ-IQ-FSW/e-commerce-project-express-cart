@@ -8,6 +8,7 @@ const {
   getCustomerOrders,
   getCustomerProfile,
   updateCustomerProfile,
+  changePassword,
 } = require('../../controllers/customerController');
 
 // customer cart routes
@@ -18,5 +19,6 @@ router.post('/checkout', handleCheckout);
 router.get('/orders', getCustomerOrders);
 router.get('/profile', getCustomerProfile);
 router.put('/profile', updateCustomerProfile);
+router.put('/profile/change-password', changePassword);
 
 module.exports = router;
