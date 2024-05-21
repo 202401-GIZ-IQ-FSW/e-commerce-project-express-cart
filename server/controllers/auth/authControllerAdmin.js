@@ -35,7 +35,10 @@ const adminLogin = async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000, // one day
     });
-    res.json({ accessToken });
+    // Exclude password and refreshToken from the response
+    const { password: _, refreshToken: __, ...adminData } = admin._doc;
+
+    res.json({ accessToken, admin: adminData });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
   }
@@ -66,11 +69,35 @@ const createAdmin = async (req, res) => {
     const existingAdmin = await AdminModel.findOne({ email });
     if (existingAdmin) return res.status(400).json({ message: 'Admin with this email already exists' });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const admin = new AdminModel({ name, email, password: hashedPassword });
+    const admin = new AdminModel({ name, email, password });
 
     await admin.save();
     res.status(201).json({ message: 'Admin created successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Get all admins
+const getAllAdmins = async (req, res) => {
+  try {
+    const admins = await AdminModel.find({});
+    res.status(200).json(admins);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Remove an admin
+const removeAdmin = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const admin = await AdminModel.findById(id);
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
+
+    await admin.remove();
+    res.status(200).json({ message: 'Admin removed successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -80,4 +107,6 @@ module.exports = {
   adminLogin,
   adminLogout,
   createAdmin,
+  getAllAdmins,
+  removeAdmin,
 };
