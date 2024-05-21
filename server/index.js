@@ -10,8 +10,8 @@ const verifyRoles = require('./middleware/verifyRoles');
 // routes
 const shopItemsRoutes = require('./routes/shopItems');
 const authRoutes = require('./routes/auth/auth');
-const adminRoutes = require('./routes/admin/admin');
-const customerRoutes = require('./routes/customer/customer');
+const adminRoutes = require('./routes/admin/root');
+const customerRoutes = require('./routes/customer/root');
 const USER_ROLES = require('./config/userRoles');
 
 const app = express();
@@ -21,12 +21,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/shop-items', shopItemsRoutes);
-app.use('/auth', authRoutes);
+app.use('/api/v1/shop-items', shopItemsRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 app.use(verifyJWT); // everything below this line will use verifyJWT
-app.use('/customer', verifyRoles(USER_ROLES.Customer), customerRoutes);
-app.use('/admin', verifyRoles(USER_ROLES.Admin), adminRoutes);
+app.use('/api/v1/customer', verifyRoles(USER_ROLES.Customer), customerRoutes);
+app.use('/api/v1/admin', verifyRoles(USER_ROLES.Admin), adminRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

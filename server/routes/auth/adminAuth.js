@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { adminLogin, adminLogout, createAdmin } = require('../../controllers/auth/authControllerAdmin');
 const verifyJWT = require('../../middleware/verifyJWT');
 const verifyRoles = require('../../middleware/verifyRoles');
 const USER_ROLES = require('../../config/userRoles');
+const { adminLogin, adminLogout, createAdmin } = require('../../controllers/auth/authControllerAdmin');
 
 // router.post('/register', createAdmin); // temporary route to create admin
 router.post('/login', adminLogin);

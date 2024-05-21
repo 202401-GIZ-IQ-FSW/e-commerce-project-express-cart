@@ -56,6 +56,11 @@ customerSchema.pre('save', async function (next) {
   next();
 });
 
+// Method to compare passwords when changing it
+customerSchema.methods.isCorrectPassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
 const CustomerModel = mongoose.model('Customer', customerSchema);
 
 module.exports = CustomerModel;

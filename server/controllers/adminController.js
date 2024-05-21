@@ -80,10 +80,24 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+const removeCustomer = async (req, res) => {
+  const customerId = req.params.id;
+
+  try {
+    const customer = await CustomerModel.findByIdAndDelete(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+    res.status(200).json({ message: 'Customer removed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
 module.exports = {
   addShopItem,
   removeShopItem,
   updateShopItem,
   getAllCustomers,
   getAllOrders,
+  removeCustomer,
 };

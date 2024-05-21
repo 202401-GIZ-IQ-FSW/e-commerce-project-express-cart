@@ -1,6 +1,7 @@
 const CustomerModel = require('../models/CustomerModel');
 const OrderModel = require('../models/OrderModel');
 const ShopItemModel = require('../models/ShopItemModel');
+const { passwordValidation } = require('../util/passwordValidation');
 
 const handleCheckout = async (req, res) => {
   const customerId = req.user.id;
@@ -81,10 +82,15 @@ const getCustomerProfile = async (req, res) => {
   const customerId = req.user.id;
 
   try {
-    const customer = await CustomerModel.findById(customerId);
+    const customer = await CustomerModel.findById(customerId)
+      .populate('cart.item')
+      .populate('orders')
+      .select('-password -refreshToken -role'); // Exclude these fields
+
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
+
     res.status(200).json(customer);
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
@@ -97,7 +103,7 @@ const updateCustomerProfile = async (req, res) => {
   const { name, address, gender } = req.body;
 
   try {
-    let customer = await CustomerModel.findById(customerId);
+    let customer = await CustomerModel.findById(customerId).select('-refreshToken -role -password'); // exclude
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
@@ -110,12 +116,49 @@ const updateCustomerProfile = async (req, res) => {
 
     res.status(200).json(customer);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+const changePassword = async (req, res) => {
+  const customerId = req.user.id;
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    const customer = await CustomerModel.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    // Check if the current password is correct
+    const isMatch = await customer.isCorrectPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect current password' });
+    }
+
+    // Validate the new password
+    const passwordValid = passwordValidation(newPassword);
+    if (!passwordValid) {
+      return res.status(400).json({
+        message:
+          'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a special character.',
+      });
+    }
+
+    // Update the password
+    customer.password = newPassword;
+    await customer.save();
+
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Something went wrong', error: error.message });
+  }
+};
+
 module.exports = {
   handleCheckout,
   getCustomerOrders,
   getCustomerProfile,
   updateCustomerProfile,
+  changePassword,
 };
