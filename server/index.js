@@ -1,6 +1,6 @@
 const express = require('express');
 require('dotenv').config();
-const rateLimit = require('express-rate-limit');
+
 
 // config and middleware
 const connectToMongo = require('./db/connection');
@@ -14,22 +14,14 @@ const authRoutes = require('./routes/auth/auth');
 const adminRoutes = require('./routes/admin');
 const customerRoutes = require('./routes/customer');
 const USER_ROLES = require('./config/userRoles');
+const rateLimiter = require('./middleware/rateLimiter');
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT : process.env.NODE_LOCAL_PORT;
 
-// Rate limiting middleware
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  message: {
-    status: 429,
-    message: 'Too many requests, please try again later.',
-  },
-  headers: true,
-});
 
-app.use(limiter); // Apply rate limiting to all requests
+
+app.use(rateLimiter); // Apply rate limiting to all requests
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
