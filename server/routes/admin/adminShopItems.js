@@ -1,5 +1,9 @@
 const express = require('express');
-const { addShopItem, updateShopItem, removeShopItem } = require('../../controllers/adminController');
+const {
+  addShopItem,
+  updateShopItem,
+  removeShopItem,
+} = require('../../controllers/admin/adminShopItemsController');
 const router = express.Router();
 
 // Shop item routes

@@ -1,8 +1,8 @@
 const { default: mongoose } = require('mongoose');
-const ShopItemModel = require('../models/ShopItemModel');
-const { getUpdateFields } = require('../util/getUpdatedFields');
-const CustomerModel = require('../models/CustomerModel');
-const OrderModel = require('../models/OrderModel');
+const ShopItemModel = require('../../models/ShopItemModel');
+const { getUpdateFields } = require('../../util/getUpdatedFields');
+const CustomerModel = require('../../models/CustomerModel');
+const OrderModel = require('../../models/OrderModel');
 
 // create a new shop item
 const addShopItem = async (req, res) => {

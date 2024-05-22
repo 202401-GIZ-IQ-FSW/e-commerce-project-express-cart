@@ -8,7 +8,7 @@ const {
   getCustomerProfile,
   updateCustomerProfile,
   changePassword,
-} = require('../../controllers/customerController');
+} = require('../../controllers/customer/customerController');
 
 // customer cart routes
 router.use('/cart', cartRoutes);

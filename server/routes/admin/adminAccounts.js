@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllAdmins, removeAdmin, updateAdmin } = require('../../controllers/auth/authControllerAdmin');
+const { getAllAdmins, removeAdmin, updateAdmin } = require('../../controllers/admin/adminProfileController');
 
 // Admin account routes
 router.get('/', getAllAdmins);
