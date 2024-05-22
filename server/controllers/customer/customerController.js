@@ -1,7 +1,7 @@
-const CustomerModel = require('../models/CustomerModel');
-const OrderModel = require('../models/OrderModel');
-const ShopItemModel = require('../models/ShopItemModel');
-const { passwordValidation } = require('../util/passwordValidation');
+const CustomerModel = require('../../models/CustomerModel');
+const OrderModel = require('../../models/OrderModel');
+const ShopItemModel = require('../../models/ShopItemModel');
+const { passwordValidation } = require('../../util/passwordValidation');
 
 const handleCheckout = async (req, res) => {
   const customerId = req.user.id;

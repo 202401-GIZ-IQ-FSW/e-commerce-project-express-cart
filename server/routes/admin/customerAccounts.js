@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllCustomers, removeCustomer } = require('../../controllers/adminController');
+const { getAllCustomers, removeCustomer } = require('../../controllers/admin/adminShopItemsController');
 
 // Customer routes
 router.get('/', getAllCustomers);

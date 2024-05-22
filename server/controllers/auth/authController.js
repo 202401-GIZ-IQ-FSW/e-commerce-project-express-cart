@@ -1,9 +1,11 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const CustomerModel = require('../../models/CustomerModel');
-const USER_ROLES = require('../../config/userRoles');
+const jwt = require('jsonwebtoken');
 
-const handleRegistration = async (req, res) => {
+const USER_ROLES = require('../../config/userRoles');
+const AdminModel = require('../../models/AdminModel');
+const CustomerModel = require('../../models/CustomerModel');
+
+const handleCustomerRegistration = async (req, res) => {
   const { name, email, password, address, gender } = req.body;
 
   // Basic validation
@@ -33,6 +35,7 @@ const handleRegistration = async (req, res) => {
   }
 };
 
+// Unified login for customer and admin
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -42,44 +45,46 @@ const handleLogin = async (req, res) => {
   }
 
   try {
-    // Check if the email exists
-    const customer = await CustomerModel.findOne({ email });
-    if (!customer) {
+    let user = await AdminModel.findOne({ email });
+    let role = USER_ROLES.Admin;
+
+    if (!user) {
+      user = await CustomerModel.findOne({ email });
+      role = USER_ROLES.Customer;
+    }
+
+    if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Compare the provided password with the hashed password in the database
-    const isMatch = await bcrypt.compare(password, customer.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-    // Generate a JWT token
+
     const accessToken = jwt.sign(
       {
         userInfo: {
-          id: customer._id,
-          role: customer.role,
+          id: user._id,
+          role: user.role,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: '1h' }
     );
 
-    // Generate a refresh token
     const refreshToken = jwt.sign(
       {
-        id: customer._id,
-        role: customer.role,
+        id: user._id,
+        role: user.role,
       },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '1d' }
     );
 
-    // Save the refresh token to the database
-    customer.refreshToken = refreshToken;
-    await customer.save();
+    user.refreshToken = refreshToken;
+    await user.save();
 
-    // Set refresh token as HttpOnly cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       sameSite: 'None',
@@ -87,44 +92,35 @@ const handleLogin = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // one day
     });
 
-    // Exclude sensitive information from the response
-    const customerResponse = {
-      _id: customer._id,
-      name: customer.name,
-      email: customer.email,
-      address: customer.address,
-      gender: customer.gender,
-      cart: customer.cart,
-      orders: customer.orders,
-      createdAt: customer.createdAt,
-      updatedAt: customer.updatedAt,
-    };
+    const { password: _password, refreshToken: _refreshToken, ...userData } = user._doc;
 
-    res.status(200).json({ accessToken, customer: customerResponse });
+    res.status(200).json({ accessToken, user: userData });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
   }
 };
 
+// Unified logout for customer and admin
 const handleLogout = async (req, res) => {
-  // on client (frontend), also delete the accessToken upon logout
   const cookies = req.cookies;
-  if (!cookies?.refreshToken) return res.sendStatus(204); // no content
+  if (!cookies?.refreshToken) return res.sendStatus(204); // No content
   const refreshToken = cookies.refreshToken;
 
   try {
-    // Check if the refresh token exists in the database
-    const customer = await CustomerModel.findOne({ refreshToken });
-    if (!customer) {
+    let user = await AdminModel.findOne({ refreshToken });
+
+    if (!user) {
+      user = await CustomerModel.findOne({ refreshToken });
+    }
+
+    if (!user) {
       res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
       return res.sendStatus(204);
     }
 
-    // Delete the refresh token from the database
-    customer.refreshToken = null;
-    await customer.save();
+    user.refreshToken = null;
+    await user.save();
 
-    // Clear the refresh token cookie
     res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
     res.sendStatus(204); // No content
   } catch (error) {
@@ -132,4 +128,4 @@ const handleLogout = async (req, res) => {
   }
 };
 
-module.exports = { handleRegistration, handleLogin, handleLogout };
+module.exports = { handleCustomerRegistration, handleLogin, handleLogout };

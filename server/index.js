@@ -10,8 +10,8 @@ const verifyRoles = require('./middleware/verifyRoles');
 // routes
 const shopItemsRoutes = require('./routes/shopItems');
 const authRoutes = require('./routes/auth/auth');
-const adminRoutes = require('./routes/admin/root');
-const customerRoutes = require('./routes/customer/root');
+const adminRoutes = require('./routes/admin');
+const customerRoutes = require('./routes/customer');
 const USER_ROLES = require('./config/userRoles');
 
 const app = express();

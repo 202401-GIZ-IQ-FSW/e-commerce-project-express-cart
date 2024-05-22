@@ -1,6 +1,5 @@
-const CustomerModel = require('../models/CustomerModel');
-const OrderModel = require('../models/OrderModel');
-const ShopItemModel = require('../models/ShopItemModel');
+const CustomerModel = require('../../models/CustomerModel');
+const ShopItemModel = require('../../models/ShopItemModel');
 
 const getCart = async (req, res) => {
   const customerId = req.user.id;
@@ -20,6 +19,7 @@ const getCart = async (req, res) => {
 const addToCart = async (req, res) => {
   const customerId = req.user.id;
   const { itemId, quantity } = req.body;
+
   try {
     const customer = await CustomerModel.findById(customerId);
     if (!customer) {
@@ -31,11 +31,21 @@ const addToCart = async (req, res) => {
       return res.status(400).json({ message: 'Item not found' });
     }
 
+    // Check if there is enough inventory available
+    if (shopItem.availableCount < quantity) {
+      return res.status(400).json({ message: 'Insufficient inventory' });
+    }
+
     // Check if the item already exists in the cart
     const existingCartItem = customer.cart.find((cartItem) => cartItem.item.equals(itemId));
     if (existingCartItem) {
       // Update the quantity of the existing item
       existingCartItem.quantity += quantity;
+
+      // Check if the new quantity exceeds the available inventory
+      if (existingCartItem.quantity > shopItem.availableCount) {
+        return res.status(400).json({ message: 'Insufficient inventory for the updated quantity' });
+      }
     } else {
       // Add new item to the cart
       customer.cart.push({ item: itemId, quantity });
@@ -52,7 +62,6 @@ const addToCart = async (req, res) => {
 
 const updateCart = async (req, res) => {
   const customerId = req.user.id;
-
   const { itemId, quantity } = req.body;
 
   try {
@@ -64,6 +73,11 @@ const updateCart = async (req, res) => {
     const shopItem = await ShopItemModel.findById(itemId);
     if (!shopItem) {
       return res.status(400).json({ message: 'Item not found' });
+    }
+
+    // Check if there is enough inventory available
+    if (shopItem.availableCount < quantity) {
+      return res.status(400).json({ message: 'Insufficient inventory' });
     }
 
     // Check if the item exists in the cart

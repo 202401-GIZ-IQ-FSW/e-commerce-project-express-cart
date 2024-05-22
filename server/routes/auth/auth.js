@@ -1,10 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const adminAuthRoutes = require('./adminAuth');
-const customerAuthRoutes = require('./customerAuth');
+const { handleRefreshToken } = require('../../controllers/auth/refreshTokenController');
+const {
+  handleLogin,
+  handleLogout,
+  handleCustomerRegistration,
+} = require('../../controllers/auth/authController');
+// const { createAdmin } = require('../../controllers/admin/adminProfileController');
 
-// admin auth routes
-router.use('/admin', adminAuthRoutes);
-router.use('/customer', customerAuthRoutes);
-
+router.use('/customer/register', handleCustomerRegistration);
+router.post('/login', handleLogin);
+router.post('/logout', handleLogout);
+router.post('/refresh-token', handleRefreshToken);
+// router.post('/register', createAdmin); // temporary route to register as admin
 module.exports = router;

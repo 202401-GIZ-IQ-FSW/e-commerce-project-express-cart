@@ -127,164 +127,123 @@
 			"name": "Authentication Routes",
 			"item": [
 				{
-					"name": "Admin",
-					"item": [
-						{
-							"name": "Admin Registration (temporary)",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Ninos\",\r\n    \"email\": \"ninos.dinkha@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/auth/admin/register",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"auth",
-										"admin",
-										"register"
-									]
+					"name": "Customer Registration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"address\": \"{{$randomStreetAddress}}\",\r\n  \"gender\": \"male\",\r\n  \"password\": \"Pass@word8\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							},
-							"response": []
+							}
 						},
-						{
-							"name": "Admin Login",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"ninos.dinkha97@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/auth/admin/login",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"auth",
-										"admin",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Admin Logout",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/auth/admin/logout",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"auth",
-										"admin",
-										"logout"
-									]
-								}
-							},
-							"response": []
+						"url": {
+							"raw": "{{base_url}}/auth/customer/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"customer",
+								"register"
+							]
 						}
-					]
+					},
+					"response": []
 				},
 				{
-					"name": "Customer",
-					"item": [
-						{
-							"name": "Customer Registration",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"address\": \"{{$randomStreetAddress}}\",\r\n  \"gender\": \"male\",\r\n  \"password\": \"Pass@word8\"\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/auth/customer/register",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"auth",
-										"customer",
-										"register"
-									]
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n \"email\": \"Mallie_Shields@gmail.com\",\r\n \"password\": \"Pass@word8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							},
-							"response": []
+							}
 						},
-						{
-							"name": "Customer Login",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{ \r\n \"email\": \"Emily.Goodwin27@gmail.com\",\r\n \"password\": \"Pass@word8new\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/auth/customer/login",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"auth",
-										"customer",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Customer Logout",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/auth/customer/logout",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"auth",
-										"customer",
-										"logout"
-									]
-								}
-							},
-							"response": []
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/refresh-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Registration (temporary)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ninos\",\r\n    \"email\": \"ninos.dinkha@gmail.com\",\r\n    \"password\": \"Pass@word8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/admin/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"admin",
+								"register"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -331,7 +290,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"itemId\": \"66451f703ba5d62efb19ebe5\",\r\n    \"quantity\": 1\r\n}",
+									"raw": "{\r\n    \"itemId\": \"6643cdfdc104d9d39ba7836f\",\r\n    \"quantity\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -385,7 +344,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"customerId\": \"664798c7b4f0d271717e001d\",\r\n    \"itemId\": \"6643cc6e6bb6b76cbce379ce\"\r\n}",
+									"raw": "{\r\n\r\n    \"itemId\": \"6643cc7c6bb6b76cbce379d0\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -435,7 +394,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Christopher\"\r\n}",
+									"raw": "{\r\n    \"name\": \"Christopherr\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -462,7 +421,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\"currentPassword\": \"Pass@word8\",\r\n\"newPassword\": \"Pass@word8new\"\r\n}\r\n",
+									"raw": "{\r\n\"currentPassword\": \"Pass@word8new\",\r\n\"newPassword\": \"Pass@word8\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -799,7 +758,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJpZCI6IjY2NGNiYTUzNzNlY2JlYTRhODFjNmEzNiIsInJvbGUiOjIwMX0sImlhdCI6MTcxNjMyNjA1NSwiZXhwIjoxNzE2MzI5NjU1fQ.WDuGZhIMeLJGm9UpLBpBxr26GozKtfdis5X8RtFc6aE",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mbyI6eyJpZCI6IjY2NGE1ZDJmZjU3ZGU3OGY2ZmI5OWNkMCIsInJvbGUiOjMwMX0sImlhdCI6MTcxNjQwODczMywiZXhwIjoxNzE2NDEyMzMzfQ.awuW_WDIlwJzMsqw7IUV1HBdCiPu0n9qcdqYKsuIHXc",
 				"type": "string"
 			}
 		]
