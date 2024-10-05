@@ -1,6 +1,6 @@
 const express = require('express');
 require('dotenv').config();
-
+const cors = require('cors');
 
 // config and middleware
 const connectToMongo = require('./db/connection');
@@ -19,7 +19,15 @@ const rateLimiter = require('./middleware/rateLimiter');
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT : process.env.NODE_LOCAL_PORT;
 
+// CORS options
+const corsOptions = {
+  origin: ['http://localhost:3000'], // Whitelist
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  credentials: true, // Allow cookies and other credentials
+};
 
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
 app.use(rateLimiter); // Apply rate limiting to all requests
 

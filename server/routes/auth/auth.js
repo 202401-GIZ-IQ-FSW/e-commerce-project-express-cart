@@ -6,11 +6,11 @@ const {
   handleLogout,
   handleCustomerRegistration,
 } = require('../../controllers/auth/authController');
-// const { createAdmin } = require('../../controllers/admin/adminProfileController');
+const { createAdmin } = require('../../controllers/admin/adminProfileController');
 
 router.use('/customer/register', handleCustomerRegistration);
 router.post('/login', handleLogin);
 router.post('/logout', handleLogout);
 router.post('/refresh-token', handleRefreshToken);
-// router.post('/register', createAdmin); // temporary route to register as admin
+router.post('/admin/register', createAdmin); // temporary route to register as admin
 module.exports = router;
