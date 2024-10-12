@@ -23,13 +23,50 @@ const handleCustomerRegistration = async (req, res) => {
     // Create a new customer
     const customer = new CustomerModel({ name, email, password, address, gender, role: USER_ROLES.Customer });
 
+    // Generate access token
+    const accessToken = jwt.sign(
+      {
+        userInfo: {
+          id: customer._id,
+          role: customer.role,
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '9h' }
+    );
+
+    // Generate refresh token
+    const refreshToken = jwt.sign(
+      {
+        id: customer._id,
+        role: customer.role,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    // Store refresh token in the database
+    customer.refreshToken = refreshToken;
+
     // Save the customer to the database
     await customer.save();
 
-    // Exclude password from the response
-    const { password: _, role: _role, ...customerData } = customer._doc;
+    // Set refresh token as an HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true, // Set to true in production with HTTPS
+      maxAge: 24 * 60 * 60 * 1000, // one day
+    });
 
-    res.status(201).json({ message: 'Customer created successfully', customer: customerData });
+    // Exclude sensitive information from the response
+    const { password: _, refreshToken: __, ...customerData } = customer._doc;
+
+    res.status(201).json({
+      message: 'Customer created successfully',
+      accessToken,
+      customer: customerData,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
   }
@@ -88,7 +125,7 @@ const handleLogin = async (req, res) => {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       sameSite: 'None',
-      secure: false,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000, // one day
     });
 
@@ -114,14 +151,14 @@ const handleLogout = async (req, res) => {
     }
 
     if (!user) {
-      res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: false });
+      res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
       return res.sendStatus(204);
     }
 
     user.refreshToken = null;
     await user.save();
 
-    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: false });
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
     res.sendStatus(204); // No content
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });

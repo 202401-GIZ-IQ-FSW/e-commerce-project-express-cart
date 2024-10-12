@@ -24,6 +24,7 @@ const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT 
 
 // custom middleware logger
 app.use(logger);
+
 // Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
 app.use(credentials);
