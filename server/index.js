@@ -7,22 +7,23 @@ const connectToMongo = require('./db/connection');
 const cookieParser = require('cookie-parser');
 const verifyJWT = require('./middleware/verifyJWT');
 const verifyRoles = require('./middleware/verifyRoles');
-
+const { logger } = require('./middleware/logEvent');
+const corsOptions = require('./config/corsOptions');
+const credentials = require('./middleware/credentials');
+const rateLimiter = require('./middleware/rateLimiter');
 // routes
 const shopItemsRoutes = require('./routes/shopItems');
 const authRoutes = require('./routes/auth/auth');
 const adminRoutes = require('./routes/admin');
 const customerRoutes = require('./routes/customer');
 const USER_ROLES = require('./config/userRoles');
-const rateLimiter = require('./middleware/rateLimiter');
-const corsOptions = require('./config/corsOptions');
-const credentials = require('./middleware/credentials');
 
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT : process.env.NODE_LOCAL_PORT;
 
-
+// custom middleware logger
+app.use(logger);
 // Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
 app.use(credentials);

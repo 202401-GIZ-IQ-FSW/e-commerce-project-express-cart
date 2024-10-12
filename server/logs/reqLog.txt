@@ -1,0 +1,9 @@
+20241012	18:23:17	1d4f067f-bfcc-43c3-b9d0-054237489865	GET	undefined	/api/v1/shop-items
+20241012	18:23:19	36c93cbd-5b21-4e08-a45e-9a814a3187d1	OPTIONS	http://localhost:3000	/api/v1/customer/profile
+20241012	18:23:19	5d624ca4-e5b2-41fa-b903-cb1ec603272d	OPTIONS	http://localhost:3000	/api/v1/auth/refresh-token
+20241012	18:23:19	926ac6db-dac1-4fe9-9e86-0ca00e1102c6	OPTIONS	http://localhost:3000	/api/v1/customer/profile
+20241012	18:23:19	481b0d83-8a25-4b2f-9c97-8dd529172d29	OPTIONS	http://localhost:3000	/api/v1/auth/refresh-token
+20241012	18:23:19	d55fb260-f8e0-4a19-a655-4037ab65a032	GET	http://localhost:3000	/api/v1/customer/profile
+20241012	18:23:19	02b751b3-3ef2-4612-8e10-2c79450ec92d	POST	http://localhost:3000	/api/v1/auth/refresh-token
+20241012	18:23:19	7d4dd732-0c6f-4fcd-bf44-890b439c7ce6	GET	http://localhost:3000	/api/v1/customer/profile
+20241012	18:23:19	edee3925-29f5-45a1-8433-d9c7676a16b0	POST	http://localhost:3000	/api/v1/auth/refresh-token
