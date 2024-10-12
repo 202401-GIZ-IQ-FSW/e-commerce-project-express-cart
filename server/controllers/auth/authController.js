@@ -70,7 +70,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '9h' }
     );
 
     const refreshToken = jwt.sign(
@@ -88,7 +88,7 @@ const handleLogin = async (req, res) => {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       sameSite: 'None',
-      secure: true,
+      secure: false,
       maxAge: 24 * 60 * 60 * 1000, // one day
     });
 
@@ -114,14 +114,14 @@ const handleLogout = async (req, res) => {
     }
 
     if (!user) {
-      res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
+      res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: false });
       return res.sendStatus(204);
     }
 
     user.refreshToken = null;
     await user.save();
 
-    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: false });
     res.sendStatus(204); // No content
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });

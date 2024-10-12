@@ -15,21 +15,22 @@ const adminRoutes = require('./routes/admin');
 const customerRoutes = require('./routes/customer');
 const USER_ROLES = require('./config/userRoles');
 const rateLimiter = require('./middleware/rateLimiter');
+const corsOptions = require('./config/corsOptions');
+const credentials = require('./middleware/credentials');
+
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT : process.env.NODE_LOCAL_PORT;
 
-// CORS options
-const corsOptions = {
-  origin: ['http://localhost:3000'], // Whitelist
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-  credentials: true, // Allow cookies and other credentials
-};
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
 
-app.use(rateLimiter); // Apply rate limiting to all requests
+// app.use(rateLimiter); // Apply rate limiting to all requests
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
